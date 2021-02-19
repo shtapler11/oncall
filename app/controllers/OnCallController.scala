@@ -8,4 +8,6 @@ import play.api.mvc._
 class OnCallController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
 
   def getName: Action[AnyContent] = Action { Ok("Hi there") }
+
+  def getDate(dateId: String): Action[AnyContent] = Action { Ok(s"Hi there $dateId") }
 }
