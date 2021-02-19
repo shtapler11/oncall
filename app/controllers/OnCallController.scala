@@ -10,4 +10,9 @@ class OnCallController @Inject()(val controllerComponents: ControllerComponents)
   def getName: Action[AnyContent] = Action { Ok("Hi there") }
 
   def getDate(dateId: String): Action[AnyContent] = Action { Ok(s"Hi there $dateId") }
+
+  def getDateInfo(dates: List[String]): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    println(s"Dates: ${dates}")
+    Ok
+  }
 }

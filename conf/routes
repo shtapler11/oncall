@@ -11,3 +11,4 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 GET     /name                       controllers.OnCallController.getName
 GET     /date                       controllers.OnCallController.getDate(dateId: String)
+GET     /date/info                  controllers.OnCallController.getDateInfo(dates: List[String])
