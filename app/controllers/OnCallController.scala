@@ -17,10 +17,10 @@ class OnCallController @Inject()(val controllerComponents: ControllerComponents)
     UserOnCall.usersOnCall.find(userOnCall => userOnCall.date.date.contentEquals(date))
   }
 
-  def getApiResponse(user: Option[UserOnCall]): Result = {
+  def getApiResponse(user: List[Option[UserOnCall]]): Result = {
     user match {
-      case Some(value) => Ok(value.toString)
-      case None => Ok("No user allocated")
+      case List(values@_*) => Ok(values.flatMap(x => x.asInstanceOf[UserOnCall].toString).toString)
+      case Nil => Ok("No user allocated")
     }
   }
 
@@ -29,9 +29,9 @@ class OnCallController @Inject()(val controllerComponents: ControllerComponents)
       case Nil =>
         val today: String = Date.today.date
         // Find an on-call user on this date
-        getApiResponse(getOnCallUserFromDate(today))
+        getApiResponse(List(getOnCallUserFromDate(today)))
 
-      case List(date) => getApiResponse(getOnCallUserFromDate(date))
+      case List(dates@_*) => Ok(dates.flatMap(getOnCallUserFromDate).toString)
     }
   }
 }
