@@ -1,6 +1,6 @@
 package controllers
 
-import models.{Date, UserOnCall}
+import models.{Date, User, UserOnCall}
 
 import javax.inject._
 import play.api._
@@ -13,9 +13,12 @@ class OnCallController @Inject()(val controllerComponents: ControllerComponents)
 
   def getDate(dateId: String): Action[AnyContent] = Action { Ok(s"Hi there $dateId") }
 
-  def getOnCallUserFromDate(date: String) = {
-    val result: Option[UserOnCall] = UserOnCall.usersOnCall.find(userOnCall => userOnCall.date.date.contentEquals(date))
-    result match {
+  def getOnCallUserFromDate(date: String): Option[UserOnCall] = {
+    UserOnCall.usersOnCall.find(userOnCall => userOnCall.date.date.contentEquals(date))
+  }
+
+  def getApiResponse(user: Option[UserOnCall]): Result = {
+    user match {
       case Some(value) => Ok(value.toString)
       case None => Ok("No user allocated")
     }
@@ -26,9 +29,9 @@ class OnCallController @Inject()(val controllerComponents: ControllerComponents)
       case Nil =>
         val today: String = Date.today.date
         // Find an on-call user on this date
-        getOnCallUserFromDate(today)
+        getApiResponse(getOnCallUserFromDate(today))
 
-      case _ => Ok(dates.mkString(","))
+      case List(date) => getApiResponse(getOnCallUserFromDate(date))
     }
   }
 }
